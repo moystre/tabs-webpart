@@ -12,6 +12,39 @@ export default class ListView extends React.Component<IListViewProps, {}> {
 
   constructor(props) {
     super(props);
+    this.addTab();
+    // this.populateTabs();
+  }
+
+  public render(): React.ReactElement<IListViewProps> {
+    return (
+      <div className={styles.listView}>
+        <span className={styles.title}>{this.props.dropdownField}</span>
+        <div>
+
+          {this.props.tabs.map((tab => {
+            <DefaultButton
+              data-automation-id={1}
+              text={tab.tabIndex.toString()}
+            />
+          }))}
+
+          <PrimaryButton
+            text={"+"}
+            onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+              this.addTab()
+            }} />
+        </div>
+        <hr></hr>
+        <DetailsList
+          items={this.props.items}
+          columns={this.props.columns}
+          checkboxVisibility={CheckboxVisibility.onHover}
+          compact={false}>
+        </DetailsList>
+        <br></br>
+      </div>
+    );
   }
 
   public handleTabSwitch(active) {
@@ -36,61 +69,36 @@ export default class ListView extends React.Component<IListViewProps, {}> {
       tabToAdd = newTab;
       console.log(this.props.tabs);
       this.props.tabs.push(tabToAdd);
-      this.amountOfTabs = this.amountOfTabs +1;
+      this.render();
+      this.amountOfTabs = this.amountOfTabs + 1;
+      console.log(this.amountOfTabs);
     }
     return null;
   }
-  public render(): React.ReactElement<IListViewProps> {
-    return (
 
-      <div className={styles.listView}>
-        <span className={styles.title}>{this.props.dropdownField}</span>
-        <div>
-          <DefaultButton
-            data-automation-id={1}
-            text={"List_1       "}
-          />
-          <DefaultButton
-            text={"-"}
-          />&nbsp;
-          <DefaultButton
-            data-automation-id={1}
-            text={"List_2       "}
-          />
-          <DefaultButton
-            text={"-"}
-          />&nbsp;
-          <DefaultButton
-            data-automation-id={1}
-            text={"List_3       "}
-          />
-          <DefaultButton
-            text={"-"}
-          />&nbsp;
-                    <DefaultButton
-            data-automation-id={1}
-            text={"List_4       "}
-          />
-          <DefaultButton
-            text={"-"}
-          />&nbsp;
-            <PrimaryButton
-            text={"+"}
-            onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                this.addTab()
-             }}
-          />
-        </div>
-        <hr></hr>
-        <DetailsList
-          items={this.props.items}
-          columns={this.props.columns}
-          checkboxVisibility={CheckboxVisibility.onHover}
-          compact={false}>
-        </DetailsList>
-        <br></br>
-      </div>
-    );
+  /*
+  populateTabs() {
+    {this.props.tabs.forEach(tab => {
+      console.log(tab.list.listTitle);
+        return (<DefaultButton
+        data-automation-id={1}
+        text={'dsadasdsa'}
+      />);
+    })}
+  }
+  */
+
+  public populateTabs() {
+    console.log('POPULATE TABS::');
+    for (let tab in this.props.tabs) {
+      console.log(tab);
+      return (
+        <DefaultButton
+          data-automation-id={1}
+          text={'dsadasdsa'}
+        />
+      );
+    }
   }
 }
 

@@ -38,7 +38,7 @@ export interface IListFromSiteAsItem {
   Description: string;
 }
 
-export interface IRenderedListsFromSite {
+export interface IRenderedListFromSite {
   [key: string]: any;
   listId: string;
   listTitle: string;
@@ -76,18 +76,16 @@ export interface IColumn {
 
 export interface ITab {
   tabIndex: number;
-  list: IDropDownList;
+  list: IRenderedListFromSite;
 }
 
 export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebPartProps> {
-  public renListsFromSite: IRenderedListsFromSite[];
+  public renListsFromSite: IRenderedListFromSite[];
   public dropDownList: IDropDownList[];
   public dropDownfieldName: string = '';
   public columns: IColumn[];
   public items: IItem[];
   public tabs: ITab[];
-  public maxAmountOfTabs: number = 4;
-  public amountOfTabs: number = 0;
 
   constructor() {
     super();
@@ -134,7 +132,6 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
   }
 
   protected async onInit(): Promise<void> {
-    // this.tabs[0] = this.renListsFromSite[0];
     this.renListsFromSite = await this.getRenderedListOfLists();
     while (this.renListsFromSite == null) {
       /* if(!this.isGetItemsFinished) {} */
@@ -145,6 +142,7 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
     this.dropDownfieldName = this.getListNameByKey(this.properties.dropdownField);
     console.log(this.dropDownfieldName);
     await this.refreshItems();
+    this.tabs = [];
   }
 
   public render(): void {
@@ -153,8 +151,10 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
       {
         description: this.properties.description,
         dropdownField: this.dropDownfieldName,
+        renderedListsFromSite: this.renListsFromSite,
         columns: this.columns,
-        items: this.items
+        items: this.items,
+        tabs: this.tabs
       }
     );
     ReactDom.render(element, this.domElement);
@@ -164,9 +164,30 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
     return this.items = await this.getItems();
   }
 
- /* public addTab(): Promise<void> {
-
-  }*/
+  /*
+  public async addTab(): Promise<void> {
+    if (this.amountOfTabs >= 4) {
+      console.log('There can not be more than 4 tabs on this web part.');
+    } else {
+      var tabToAdd: ITab;
+      let newTabIndex = this.amountOfTabs + 1;
+      let newList = await this.renListsFromSite[this.amountOfTabs];
+      var newTab: {
+        tabIndex: number;
+        list: IRenderedListFromSite;
+      };
+      newTab = {
+        tabIndex: newTabIndex,
+        list: newList
+      }
+      tabToAdd = newTab;
+      console.log(this.tabs);
+      this.tabs.push(tabToAdd);
+      this.amountOfTabs +1;
+    }
+    return null;
+  }
+*/
 
   private async getSelectionList(): Promise<IDropDownList[]> {
     var selectionList: IDropDownList[]
@@ -175,7 +196,7 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
       key: string,
       text: string
     }[] = [];
-    this.renListsFromSite.forEach((element: IRenderedListsFromSite) => {
+    this.renListsFromSite.forEach((element: IRenderedListFromSite) => {
       list.push({
         key: i.toString(),
         text: element.listTitle
@@ -186,8 +207,8 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
     return selectionList;
   }
 
-  private async getRenderedListOfLists(): Promise<IRenderedListsFromSite[]> {
-    var renderedListsFromSite: IRenderedListsFromSite[];
+  private async getRenderedListOfLists(): Promise<IRenderedListFromSite[]> {
+    var renderedListsFromSite: IRenderedListFromSite[];
     if (Environment.type === EnvironmentType.Local) {
       console.log('Local environment');
       return null;

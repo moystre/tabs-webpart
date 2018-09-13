@@ -140,9 +140,9 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
     this.items = [];
     this.items = await this.getItems();
     this.dropDownfieldName = this.getListNameByKey(this.properties.dropdownField);
-    console.log(this.dropDownfieldName);
+    // console.log(this.dropDownfieldName);
     await this.refreshItems();
-    this.tabs = [];
+    // this.tabs = [];
   }
 
   public render(): void {
@@ -154,7 +154,7 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
         renderedListsFromSite: this.renListsFromSite,
         columns: this.columns,
         items: this.items,
-        tabs: this.tabs
+       // tabs: this.tabs
       }
     );
     ReactDom.render(element, this.domElement);
@@ -294,7 +294,7 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
           container = await this._getListData(this.getListNameByKey(this.properties.dropdownField));
         }
         container.value.forEach((item: ISPList) => {
-          console.log(item);
+        //  console.log(item);
           list.push({
             Id: item.Id,
             title: item.Title,
@@ -306,7 +306,7 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
           })
         });
         renderedList = list;
-        console.log(list);
+        // console.log(list);
       }
       catch (exception) {
         console.warn(exception);

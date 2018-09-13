@@ -1,5 +1,19 @@
 @import '~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss';
 
+.defButton {
+background-color: aquamarine;
+color: blue;
+border-color: red;
+}
+
+.tabsRow  {
+  white-space: nowrap;
+}
+
+.tabsRow > div {
+  display: inline-block;
+}
+
 .title {
   @include ms-font-xxl;
   cursor: pointer;

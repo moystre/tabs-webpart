@@ -5,34 +5,72 @@ import { IRenderedListFromSite, ITab } from '../TabsWebPart';
 import { IListViewProps } from './ITabsProps';
 import styles from './Tabs.module.scss';
 
+export interface IListViewState {
+  tabs: ITab[];
+  activeTab: number;
+}
 
-export default class ListView extends React.Component<IListViewProps, {}> {
-  public activeTab: number = 0;
+export default class ListView extends React.Component<IListViewProps, IListViewState> {
   public amountOfTabs: number = 0;
 
-  constructor(props) {
+  constructor(props: IListViewProps) {
     super(props);
+    this.state = {
+      tabs: [],
+      activeTab: 0
+    };
+  }
+
+  public componentDidMount(): void {
     this.addTab();
-    // this.populateTabs();
   }
 
   public render(): React.ReactElement<IListViewProps> {
+    console.log('rendered');
     return (
       <div className={styles.listView}>
         <span className={styles.title}>{this.props.dropdownField}</span>
-        <div>
+        <div className={styles.tabsRow}>
+          {this.state.tabs[0] ?
+            <div>
+              <DefaultButton
+                text={this.state.tabs[0].list.listTitle}/>
+              <DefaultButton
+                text={"-"} />&nbsp;
+            </div>
+            : null}
 
-          {this.props.tabs.map((tab => {
-            <DefaultButton
-              data-automation-id={1}
-              text={tab.tabIndex.toString()}
-            />
-          }))}
+          {this.state.tabs[1] ?
+            <div>
+              <DefaultButton
+                text={this.state.tabs[1].list.listTitle}/>
+              <DefaultButton
+                text={"-"} />&nbsp;
+            </div>
+            : null}
+
+          {this.state.tabs[2] ?
+            <div>
+              <DefaultButton
+                text={this.state.tabs[2].list.listTitle}/>
+              <DefaultButton
+                text={"-"} />&nbsp;
+            </div>
+            : null}
+
+          {this.state.tabs[3] ?
+            <div>
+              <DefaultButton
+                text={this.state.tabs[3].list.listTitle}/>
+              <DefaultButton
+                text={"-"} />&nbsp;
+            </div>
+            : null}
 
           <PrimaryButton
             text={"+"}
             onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-              this.addTab()
+              this.addTab();
             }} />
         </div>
         <hr></hr>
@@ -47,17 +85,13 @@ export default class ListView extends React.Component<IListViewProps, {}> {
     );
   }
 
-  public handleTabSwitch(active) {
-    this.activeTab = active;
-  }
-
   public async addTab(): Promise<void> {
-    if (this.amountOfTabs >= 4) {
+    if (this.state.tabs.length >= 4) {
       console.log('There can not be more than 4 tabs on this web part.');
     } else {
       var tabToAdd: ITab;
-      let newTabIndex = this.amountOfTabs + 1;
-      let newList = await this.props.renderedListsFromSite[this.amountOfTabs];
+      let newTabIndex = this.state.tabs.length + 1;
+      let newList = await this.props.renderedListsFromSite[newTabIndex];
       var newTab: {
         tabIndex: number;
         list: IRenderedListFromSite;
@@ -67,38 +101,40 @@ export default class ListView extends React.Component<IListViewProps, {}> {
         list: newList
       }
       tabToAdd = newTab;
-      console.log(this.props.tabs);
-      this.props.tabs.push(tabToAdd);
+      var newTabs = this.state.tabs.concat(tabToAdd);
+      this.setState({
+        tabs: newTabs,
+        activeTab: tabToAdd.tabIndex
+      })
+      console.log('tabs: ');
+      console.log(this.state.tabs);
       this.render();
-      this.amountOfTabs = this.amountOfTabs + 1;
-      console.log(this.amountOfTabs);
     }
     return null;
   }
-
   /*
-  populateTabs() {
-    {this.props.tabs.forEach(tab => {
-      console.log(tab.list.listTitle);
-        return (<DefaultButton
-        data-automation-id={1}
-        text={'dsadasdsa'}
-      />);
-    })}
+    public populateTabs() {
+      console.log('populateTabs: ');
+      for (let tab in this.state.tabs) {
+        console.log(this.state.tabs[tab].list.listTitle);
+        return (
+          <div>
+            <DefaultButton
+           
+              text={"List "}
+            />
+            <DefaultButton
+              text={"-"}
+            />&nbsp;
+          </div>
+        )
+      }
+    }
+  */
+  /*
+  public handleTabSwitch(active) {
+    this.activeTab = active;
   }
   */
-
-  public populateTabs() {
-    console.log('POPULATE TABS::');
-    for (let tab in this.props.tabs) {
-      console.log(tab);
-      return (
-        <DefaultButton
-          data-automation-id={1}
-          text={'dsadasdsa'}
-        />
-      );
-    }
-  }
 }
 

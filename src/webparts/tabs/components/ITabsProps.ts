@@ -1,5 +1,5 @@
 import { IColumn } from "office-ui-fabric-react/lib/DetailsList";
-import { IItem, IRenderedListFromSite, ITab } from "../TabsWebPart";
+import { IItem, IRenderedListFromSite } from "../TabsWebPart";
 
 export interface IListViewProps {
   description: string;
@@ -7,5 +7,5 @@ export interface IListViewProps {
   renderedListsFromSite: IRenderedListFromSite[];
   columns: IColumn[];
   items: IItem[];
-  tabs: ITab[];
+ // tabs: ITab[];
 }

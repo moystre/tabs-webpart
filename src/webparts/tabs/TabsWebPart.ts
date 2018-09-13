@@ -154,7 +154,7 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
         renderedListsFromSite: this.renListsFromSite,
         columns: this.columns,
         items: this.items,
-       // tabs: this.tabs
+        // tabs: this.tabs
       }
     );
     ReactDom.render(element, this.domElement);
@@ -294,7 +294,7 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
           container = await this._getListData(this.getListNameByKey(this.properties.dropdownField));
         }
         container.value.forEach((item: ISPList) => {
-        //  console.log(item);
+          //  console.log(item);
           list.push({
             Id: item.Id,
             title: item.Title,
@@ -373,10 +373,23 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
               groupName: strings.BasicGroupName,
               groupFields: [
                 PropertyPaneDropdown('dropdownField', {
-                  label: 'Selected list:',
+                  label: 'Tab 1:',
+                  options: this.dropDownList
+                }),
+                PropertyPaneDropdown('dropdownField', {
+                  label:  'Tab 2:',
+                  options: this.dropDownList
+                }), 
+                PropertyPaneDropdown('dropdownField', {
+                  label:  'Tab 3:',
+                  options: this.dropDownList
+                }), 
+                PropertyPaneDropdown('dropdownField', {
+                  label:  'Tab 4:',
                   options: this.dropDownList
                 })
               ]
+
             }
           ]
         }

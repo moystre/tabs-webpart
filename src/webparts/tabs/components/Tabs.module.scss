@@ -1,17 +1,50 @@
 @import '~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss';
 
-.defButton {
-background-color: aquamarine;
-color: blue;
-border-color: red;
+
+
+/* width */
+::-webkit-scrollbar {
+  width: 3px;
+  background: $ms-color-white;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: $ms-color-white; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background:  $ms-color-white; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: $ms-color-themePrimary 
 }
 
 .tabsRow  {
   white-space: nowrap;
+ // overflow: scroll;
+ // overflow-y: auto;
 }
 
 .tabsRow > div {
   display: inline-block;
+}
+
+.listTab {
+  max-width: 75 px;
+  width: 75 px;
+}
+
+.deleteTab {
+  max-width: 5 px;
+  width: 5 px;
+}
+
+.addTab {
+  right: 0;
 }
 
 .title {

@@ -30,12 +30,18 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
     return (
       <div className={styles.listView}>
         <span className={styles.title}>{this.props.dropdownField}</span>
+        <br></br>
         <div className={styles.tabsRow}>
           {this.state.tabs[0] ?
             <div>
               <DefaultButton
-                text={this.state.tabs[0].list.listTitle}/>
+                className={styles.listTab}
+                text={this.state.tabs[0].list.listTitle}
+                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                  this.setActiveTab(0);
+                }} />
               <DefaultButton
+                className={styles.deleteTab}
                 text={"-"} />&nbsp;
             </div>
             : null}
@@ -43,8 +49,13 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
           {this.state.tabs[1] ?
             <div>
               <DefaultButton
-                text={this.state.tabs[1].list.listTitle}/>
+                className={styles.listTab}
+                text={this.state.tabs[1].list.listTitle}
+                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                  this.setActiveTab(1);
+                }} />
               <DefaultButton
+                className={styles.deleteTab}
                 text={"-"} />&nbsp;
             </div>
             : null}
@@ -52,8 +63,13 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
           {this.state.tabs[2] ?
             <div>
               <DefaultButton
-                text={this.state.tabs[2].list.listTitle}/>
+                className={styles.listTab}
+                text={this.state.tabs[2].list.listTitle}
+                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                  this.setActiveTab(2);
+                }} />
               <DefaultButton
+                className={styles.deleteTab}
                 text={"-"} />&nbsp;
             </div>
             : null}
@@ -61,13 +77,19 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
           {this.state.tabs[3] ?
             <div>
               <DefaultButton
-                text={this.state.tabs[3].list.listTitle}/>
+                className={styles.listTab}
+                text={this.state.tabs[3].list.listTitle}
+                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                  this.setActiveTab(3);
+                }} />
               <DefaultButton
+                className={styles.deleteTab}
                 text={"-"} />&nbsp;
             </div>
             : null}
 
           <PrimaryButton
+            className={styles.addTab}
             text={"+"}
             onClick={(event: React.MouseEvent<HTMLDivElement>) => {
               this.addTab();
@@ -83,6 +105,13 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
         <br></br>
       </div>
     );
+  }
+  
+  public async setActiveTab(tab: number): Promise<void> {
+    await this.setState({
+      activeTab: tab
+    })
+    console.log('activeTab: ' + this.state.activeTab);
   }
 
   public async addTab(): Promise<void> {
@@ -130,11 +159,6 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
         )
       }
     }
-  */
-  /*
-  public handleTabSwitch(active) {
-    this.activeTab = active;
-  }
   */
 }
 

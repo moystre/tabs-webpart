@@ -24,7 +24,10 @@ export interface ISPList {
 
 export interface IListViewWebPartProps {
   description: string;
-  dropdownField: string;
+  dropdownField0: string;
+  dropdownField1: string;
+  dropdownField2: string;
+  dropdownField3: string;
 }
 
 export interface IListsFromSite {
@@ -52,6 +55,10 @@ export interface IDropDownLists {
 export interface IDropDownList {
   key: string;
   text: string;
+}
+
+export interface IItems {
+  value: IItem[];
 }
 
 export interface IItem {
@@ -82,9 +89,16 @@ export interface ITab {
 export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebPartProps> {
   public renListsFromSite: IRenderedListFromSite[];
   public dropDownList: IDropDownList[];
-  public dropDownfieldName: string = '';
+  public dropDownfieldName0: string = '';
+  public dropDownfieldName1: string = '';
+  public dropDownfieldName2: string = '';
+  public dropDownfieldName3: string = '';
   public columns: IColumn[];
-  public items: IItem[];
+  // public items: IItems;
+  public items0: IItem[];
+  public items1: IItem[];
+  public items2: IItem[];
+  public items3: IItem[];
   public tabs: ITab[];
 
   constructor() {
@@ -137,9 +151,16 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
       /* if(!this.isGetItemsFinished) {} */
     }
     this.dropDownList = await this.getSelectionList();
-    this.items = [];
-    this.items = await this.getItems();
-    this.dropDownfieldName = this.getListNameByKey(this.properties.dropdownField);
+    this.items0, this.items1, this.items2, this.items3 = null;
+    this.items0 = await this.getItems(this.properties.dropdownField0);
+    this.items1 = await this.getItems(this.properties.dropdownField1);
+    this.items2 = await this.getItems(this.properties.dropdownField2);
+    this.items3 = await this.getItems(this.properties.dropdownField3);
+    console.log(this.items0);
+    this.dropDownfieldName0 = this.getListNameByKey(this.properties.dropdownField0);
+    this.dropDownfieldName1 = this.getListNameByKey(this.properties.dropdownField1);
+    this.dropDownfieldName2 = this.getListNameByKey(this.properties.dropdownField2);
+    this.dropDownfieldName3 = this.getListNameByKey(this.properties.dropdownField3);
     // console.log(this.dropDownfieldName);
     await this.refreshItems();
     // this.tabs = [];
@@ -150,10 +171,16 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
       ListView,
       {
         description: this.properties.description,
-        dropdownField: this.dropDownfieldName,
+        dropdownField0: this.dropDownfieldName0,
+        dropdownField1: this.dropDownfieldName1,
+        dropdownField2: this.dropDownfieldName2,
+        dropdownField3: this.dropDownfieldName3,
         renderedListsFromSite: this.renListsFromSite,
         columns: this.columns,
-        items: this.items,
+        items0: this.items0,
+        items1: this.items1,
+        items2: this.items2,
+        items3: this.items3
         // tabs: this.tabs
       }
     );
@@ -161,33 +188,8 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
   }
 
   private async refreshItems(): Promise<IItem[]> {
-    return this.items = await this.getItems();
+    return this.items0 = await this.getItems(this.properties.dropdownField0);
   }
-
-  /*
-  public async addTab(): Promise<void> {
-    if (this.amountOfTabs >= 4) {
-      console.log('There can not be more than 4 tabs on this web part.');
-    } else {
-      var tabToAdd: ITab;
-      let newTabIndex = this.amountOfTabs + 1;
-      let newList = await this.renListsFromSite[this.amountOfTabs];
-      var newTab: {
-        tabIndex: number;
-        list: IRenderedListFromSite;
-      };
-      newTab = {
-        tabIndex: newTabIndex,
-        list: newList
-      }
-      tabToAdd = newTab;
-      console.log(this.tabs);
-      this.tabs.push(tabToAdd);
-      this.amountOfTabs +1;
-    }
-    return null;
-  }
-*/
 
   private async getSelectionList(): Promise<IDropDownList[]> {
     var selectionList: IDropDownList[]
@@ -269,7 +271,8 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
     return _text;
   }
 
-  private async getItems(): Promise<IItem[]> {
+  private async getItems(dropdownField: string): Promise<IItem[]> {
+    var _dropDownField = dropdownField;
     var renderedList: IItem[];
     if (Environment.type === EnvironmentType.Local) {
       console.log('Local environment');
@@ -288,10 +291,10 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
           businessModule: string,
           authorId: number
         }[] = [];
-        if (this.properties.dropdownField == null) {
-          this.properties.dropdownField = '1';
+        if (_dropDownField == null) {
+          _dropDownField = '1';
         } else {
-          container = await this._getListData(this.getListNameByKey(this.properties.dropdownField));
+          container = await this._getListData(this.getListNameByKey(_dropDownField));
         }
         container.value.forEach((item: ISPList) => {
           //  console.log(item);
@@ -355,8 +358,11 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
 
   protected async onPropertyPaneFieldChanged(): Promise<void> {
     await this.refreshItems();
-    this.dropDownfieldName = this.dropDownList[this.properties.dropdownField].text.toString();
-    console.log(this.dropDownfieldName);
+    this.dropDownfieldName0 = this.dropDownList[this.properties.dropdownField0].text.toString();
+    this.dropDownfieldName1 = this.dropDownList[this.properties.dropdownField1].text.toString();
+    this.dropDownfieldName2 = this.dropDownList[this.properties.dropdownField2].text.toString();
+    this.dropDownfieldName3 = this.dropDownList[this.properties.dropdownField3].text.toString();
+    // console.log(this.dropDownfieldName0);
     this.render();
     return null;
   }
@@ -372,20 +378,20 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
             {
               groupName: strings.BasicGroupName,
               groupFields: [
-                PropertyPaneDropdown('dropdownField', {
+                PropertyPaneDropdown('dropdownField0', {
                   label: 'Tab 1:',
                   options: this.dropDownList
                 }),
-                PropertyPaneDropdown('dropdownField', {
-                  label:  'Tab 2:',
+                PropertyPaneDropdown('dropdownField1', {
+                  label: 'Tab 2:',
                   options: this.dropDownList
-                }), 
-                PropertyPaneDropdown('dropdownField', {
-                  label:  'Tab 3:',
+                }),
+                PropertyPaneDropdown('dropdownField2', {
+                  label: 'Tab 3:',
                   options: this.dropDownList
-                }), 
-                PropertyPaneDropdown('dropdownField', {
-                  label:  'Tab 4:',
+                }),
+                PropertyPaneDropdown('dropdownField3', {
+                  label: 'Tab 4:',
                   options: this.dropDownList
                 })
               ]

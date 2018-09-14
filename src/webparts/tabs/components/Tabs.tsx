@@ -12,6 +12,7 @@ export interface IListViewState {
 
 export default class ListView extends React.Component<IListViewProps, IListViewState> {
   public amountOfTabs: number = 0;
+  public tabsToView: ITab[] = [];
 
   constructor(props: IListViewProps) {
     super(props);
@@ -21,24 +22,23 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
     };
   }
 
-  public componentDidMount(): void {
-    this.addTab();
+  public async componentDidMount(): Promise<void> {
+    await this.addTab();
+    console.log(this.state.tabs);
   }
 
   public render(): React.ReactElement<IListViewProps> {
     console.log('rendered');
     return (
       <div className={styles.listView}>
-        <span className={styles.title}>{this.props.dropdownField}</span>
-        <br></br>
         <div className={styles.tabsRow}>
           {this.state.tabs[0] ?
             <div>
               <DefaultButton
                 className={styles.listTab}
-                text={this.state.tabs[0].list.listTitle}
+                text={this.props.dropdownField0}
                 onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                  this.setActiveTab(0);
+                  this.changeActiveTab(0);
                 }} />
               <DefaultButton
                 className={styles.deleteTab}
@@ -50,9 +50,9 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
             <div>
               <DefaultButton
                 className={styles.listTab}
-                text={this.state.tabs[1].list.listTitle}
+                text={this.props.dropdownField1}
                 onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                  this.setActiveTab(1);
+                  this.changeActiveTab(1);
                 }} />
               <DefaultButton
                 className={styles.deleteTab}
@@ -64,9 +64,9 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
             <div>
               <DefaultButton
                 className={styles.listTab}
-                text={this.state.tabs[2].list.listTitle}
+                text={this.props.dropdownField2}
                 onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                  this.setActiveTab(2);
+                  this.changeActiveTab(2);
                 }} />
               <DefaultButton
                 className={styles.deleteTab}
@@ -78,9 +78,9 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
             <div>
               <DefaultButton
                 className={styles.listTab}
-                text={this.state.tabs[3].list.listTitle}
+                text={this.props.dropdownField3}
                 onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                  this.setActiveTab(3);
+                  this.changeActiveTab(3);
                 }} />
               <DefaultButton
                 className={styles.deleteTab}
@@ -96,22 +96,85 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
             }} />
         </div>
         <hr></hr>
-        <DetailsList
-          items={this.props.items}
-          columns={this.props.columns}
-          checkboxVisibility={CheckboxVisibility.onHover}
-          compact={false}>
-        </DetailsList>
+        {
+          this.state.tabs[0] && this.state.activeTab == 0 ?
+            <DetailsList
+              className={'DetailsList'}
+              items={this.props.items0}
+              columns={this.props.columns}
+              checkboxVisibility={CheckboxVisibility.onHover}
+              compact={false}>
+            </DetailsList> :
+
+            this.state.tabs[1] && this.state.activeTab == 1 ?
+              <DetailsList
+                className={'DetailsList'}
+                items={this.props.items1}
+                columns={this.props.columns}
+                checkboxVisibility={CheckboxVisibility.onHover}
+                compact={false}>
+              </DetailsList> :
+
+              this.state.tabs[2] && this.state.activeTab == 2 ?
+                <DetailsList
+                  className={'DetailsList'}
+                  items={this.props.items2}
+                  columns={this.props.columns}
+                  checkboxVisibility={CheckboxVisibility.onHover}
+                  compact={false}>
+                </DetailsList> :
+
+                this.state.tabs[3] && this.state.activeTab == 3 ?
+                  <DetailsList
+                    className={'DetailsList'}
+                    items={this.props.items3}
+                    columns={this.props.columns}
+                    checkboxVisibility={CheckboxVisibility.onHover}
+                    compact={false}>
+                  </DetailsList> :
+                  null
+        }
         <br></br>
       </div>
     );
   }
-  
-  public async setActiveTab(tab: number): Promise<void> {
-    await this.setState({
-      activeTab: tab
-    })
-    console.log('activeTab: ' + this.state.activeTab);
+  /*
+    public returnItemsOfActiveTab(): IItem[] {
+      var itemsOfActiveTab = null;
+        this.props.items.forEach(array => {
+        if (array.value.indexOf.toString == this.state.activeTab.toString) {
+          console.log(array.value.indexOf.toString);
+          itemsOfActiveTab = array;
+        }
+      });
+      return itemsOfActiveTab;
+    }
+  */
+  /*
+   public getTabByNumber(tabNumber: number): ITab {
+     var tab = null;
+     switch (tabNumber) {
+       case 0:
+         tab = this.state.tab0;
+         break;
+       case 1:
+         tab = this.state.tab1;
+         break;
+       case 2:
+         tab = this.state.tab2;
+         break;
+       case 3:
+         tab = this.state.tab3;
+         break;
+       default:  tab = this.state.tab0;
+         break;
+     }
+     return tab;
+   }
+*/
+  public async changeActiveTab(tabNumber: number): Promise<void> {
+    this.setState({ activeTab: tabNumber });
+    //  console.log('activeTab: ' + this.state.tabs[tabNumber].list.listTitle);
   }
 
   public async addTab(): Promise<void> {
@@ -121,20 +184,31 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
       var tabToAdd: ITab;
       let newTabIndex = this.state.tabs.length + 1;
       let newList = await this.props.renderedListsFromSite[newTabIndex];
+      console.log('')
       var newTab: {
         tabIndex: number;
         list: IRenderedListFromSite;
+        active: boolean;
       };
-      newTab = {
-        tabIndex: newTabIndex,
-        list: newList
+      if (this.state.tabs.length > 0) {
+        newTab = {
+          tabIndex: newTabIndex,
+          list: newList,
+          active: false
+        }
+      } else {
+        newTab = {
+          tabIndex: newTabIndex,
+          list: newList,
+          active: true
+        }
       }
       tabToAdd = newTab;
       var newTabs = this.state.tabs.concat(tabToAdd);
       this.setState({
-        tabs: newTabs,
-        activeTab: tabToAdd.tabIndex
+        tabs: newTabs
       })
+      this.changeActiveTab(newTabIndex);
       console.log('tabs: ');
       console.log(this.state.tabs);
       this.render();

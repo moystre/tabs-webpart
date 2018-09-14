@@ -35,7 +35,9 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
           {this.state.tabs[0] ?
             <div>
               <DefaultButton
-                className={styles.listTab}
+                className={this.state.activeTab == 0 ?
+                  styles.listTabSelected : styles.listTab
+                }
                 text={this.props.dropdownField0}
                 onClick={(event: React.MouseEvent<HTMLDivElement>) => {
                   this.changeActiveTab(0);
@@ -49,7 +51,9 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
           {this.state.tabs[1] ?
             <div>
               <DefaultButton
-                className={styles.listTab}
+                className={this.state.activeTab == 1 ?
+                  styles.listTabSelected : styles.listTab
+                }
                 text={this.props.dropdownField1}
                 onClick={(event: React.MouseEvent<HTMLDivElement>) => {
                   this.changeActiveTab(1);
@@ -63,7 +67,9 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
           {this.state.tabs[2] ?
             <div>
               <DefaultButton
-                className={styles.listTab}
+                className={this.state.activeTab == 2 ?
+                  styles.listTabSelected : styles.listTab
+                }
                 text={this.props.dropdownField2}
                 onClick={(event: React.MouseEvent<HTMLDivElement>) => {
                   this.changeActiveTab(2);
@@ -77,7 +83,9 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
           {this.state.tabs[3] ?
             <div>
               <DefaultButton
-                className={styles.listTab}
+                className={this.state.activeTab == 3 ?
+                  styles.listTabSelected : styles.listTab
+                }
                 text={this.props.dropdownField3}
                 onClick={(event: React.MouseEvent<HTMLDivElement>) => {
                   this.changeActiveTab(3);
@@ -132,7 +140,14 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
                     checkboxVisibility={CheckboxVisibility.onHover}
                     compact={false}>
                   </DetailsList> :
-                  null
+
+                  <DetailsList
+                    className={'DetailsList'}
+                    items={this.props.items0}
+                    columns={this.props.columns}
+                    checkboxVisibility={CheckboxVisibility.onHover}
+                    compact={false}>
+                  </DetailsList>
         }
         <br></br>
       </div>
@@ -188,20 +203,18 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
       var newTab: {
         tabIndex: number;
         list: IRenderedListFromSite;
-        active: boolean;
       };
       if (this.state.tabs.length > 0) {
         newTab = {
           tabIndex: newTabIndex,
           list: newList,
-          active: false
         }
       } else {
         newTab = {
           tabIndex: newTabIndex,
           list: newList,
-          active: true
         }
+        this.changeActiveTab(newTabIndex);
       }
       tabToAdd = newTab;
       var newTabs = this.state.tabs.concat(tabToAdd);

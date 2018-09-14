@@ -148,7 +148,6 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
   protected async onInit(): Promise<void> {
     this.renListsFromSite = await this.getRenderedListOfLists();
     while (this.renListsFromSite == null) {
-      /* if(!this.isGetItemsFinished) {} */
     }
     this.dropDownList = await this.getSelectionList();
     this.items0, this.items1, this.items2, this.items3 = null;
@@ -156,7 +155,6 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
     this.items1 = await this.getItems(this.properties.dropdownField1);
     this.items2 = await this.getItems(this.properties.dropdownField2);
     this.items3 = await this.getItems(this.properties.dropdownField3);
-    console.log(this.items0);
     this.dropDownfieldName0 = this.getListNameByKey(this.properties.dropdownField0);
     this.dropDownfieldName1 = this.getListNameByKey(this.properties.dropdownField1);
     this.dropDownfieldName2 = this.getListNameByKey(this.properties.dropdownField2);
@@ -188,7 +186,11 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
   }
 
   private async refreshItems(): Promise<IItem[]> {
-    return this.items0 = await this.getItems(this.properties.dropdownField0);
+    return (
+      this.items0 = await this.getItems(this.properties.dropdownField0),
+      this.items1 = await this.getItems(this.properties.dropdownField1),
+      this.items2 = await this.getItems(this.properties.dropdownField2),
+      this.items3 = await this.getItems(this.properties.dropdownField3));
   }
 
   private async getSelectionList(): Promise<IDropDownList[]> {
@@ -292,7 +294,7 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
           authorId: number
         }[] = [];
         if (_dropDownField == null) {
-          _dropDownField = '1';
+          _dropDownField = '0';
         } else {
           container = await this._getListData(this.getListNameByKey(_dropDownField));
         }
@@ -358,11 +360,14 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
 
   protected async onPropertyPaneFieldChanged(): Promise<void> {
     await this.refreshItems();
-    this.dropDownfieldName0 = this.dropDownList[this.properties.dropdownField0].text.toString();
-    this.dropDownfieldName1 = this.dropDownList[this.properties.dropdownField1].text.toString();
-    this.dropDownfieldName2 = this.dropDownList[this.properties.dropdownField2].text.toString();
-    this.dropDownfieldName3 = this.dropDownList[this.properties.dropdownField3].text.toString();
-    // console.log(this.dropDownfieldName0);
+    try {
+      this.dropDownfieldName0 = await this.dropDownList[this.properties.dropdownField0].text.toString();
+      this.dropDownfieldName1 = await this.dropDownList[this.properties.dropdownField1].text.toString();
+      this.dropDownfieldName2 = await this.dropDownList[this.properties.dropdownField2].text.toString();
+      this.dropDownfieldName3 = await this.dropDownList[this.properties.dropdownField3].text.toString();
+    } catch (exception) {
+      console.warn(exception);
+    };
     this.render();
     return null;
   }

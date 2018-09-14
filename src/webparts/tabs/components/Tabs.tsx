@@ -235,4 +235,3 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
     }
   */
 }
-

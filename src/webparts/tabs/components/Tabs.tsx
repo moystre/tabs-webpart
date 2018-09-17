@@ -44,7 +44,10 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
                 }} />
               <DefaultButton
                 className={styles.deleteTab}
-                text={'×'} />&nbsp;
+                text={'×'}
+                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                  this.closeTab(0);
+                }} />&nbsp;
             </div>
             : null}
 
@@ -60,7 +63,10 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
                 }} />
               <DefaultButton
                 className={styles.deleteTab}
-                text={'×'} />&nbsp;
+                text={'×'} 
+                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                  this.closeTab(1);
+                }}/>&nbsp;
             </div>
             : null}
 
@@ -76,7 +82,10 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
                 }} />
               <DefaultButton
                 className={styles.deleteTab}
-                text={'×'} />&nbsp;
+                text={'×'}
+                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                  this.closeTab(2);
+                }} />&nbsp;
             </div>
             : null}
 
@@ -92,7 +101,10 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
                 }} />
               <DefaultButton
                 className={styles.deleteTab}
-                text={'×'} />&nbsp;
+                text={'×'}
+                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                  this.closeTab(3);
+                }} />&nbsp;
             </div>
             : null}
 
@@ -190,6 +202,15 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
   public async changeActiveTab(tabNumber: number): Promise<void> {
     this.setState({ activeTab: tabNumber });
     //  console.log('activeTab: ' + this.state.tabs[tabNumber].list.listTitle);
+  }
+
+  public async closeTab(tabNumber: number): Promise<void> {
+    var currentTabs = this.state.tabs;
+    currentTabs.splice(tabNumber, 1);
+    this.setState({
+      tabs: currentTabs
+    })
+    //set active tab
   }
 
   public async addTab(): Promise<void> {

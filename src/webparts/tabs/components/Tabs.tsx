@@ -59,7 +59,9 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
                 }} />
               {this.canCloseTab(1) ?
                 <DefaultButton
-                  className={styles.deleteTab}
+                  className={this.isTabActive(1) ?
+                    styles.deleteTabActive :
+                    styles.deleteTab}
                   text={'×'}
                   onClick={(event: React.MouseEvent<HTMLDivElement>) => {
                     this.closeTab(1);
@@ -80,7 +82,9 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
                 }} />
               {this.canCloseTab(2) ?
                 <DefaultButton
-                  className={styles.deleteTab}
+                className={this.isTabActive(2) ?
+                  styles.deleteTabActive :
+                  styles.deleteTab}
                   text={'×'}
                   onClick={(event: React.MouseEvent<HTMLDivElement>) => {
                     this.closeTab(2);
@@ -101,7 +105,9 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
                 }} />
               {this.canCloseTab(3) ?
                 <DefaultButton
-                  className={styles.deleteTab}
+                className={this.isTabActive(3) ?
+                  styles.deleteTabActive :
+                  styles.deleteTab}
                   text={'×'}
                   onClick={(event: React.MouseEvent<HTMLDivElement>) => {
                     this.closeTab(3);
@@ -184,14 +190,22 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
     this.render();
   }
 
+  public isTabActive(tabNumber: number): boolean {
+    if (this.state.activeTab == tabNumber) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   public async closeTab(tabNumber: number): Promise<void> {
     var currentTabs = this.state.tabs;
     currentTabs.splice(tabNumber, 1);
     this.setState({
       tabs: currentTabs
     })
-    if(tabNumber == this.state.activeTab) {
-      this.changeActiveTab(tabNumber-1);
+    if (tabNumber == this.state.activeTab) {
+      this.changeActiveTab(tabNumber - 1);
     }
   }
 

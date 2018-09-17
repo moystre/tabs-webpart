@@ -110,12 +110,23 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
             </div>
             : null}
 
-          <PrimaryButton
-            className={styles.addTab}
-            text={"+"}
-            onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-              this.addTab();
-            }} />
+          {this.canAddTabs() ?
+            <PrimaryButton
+              className={styles.addTab}
+              text={"+"}
+              onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                this.addTab();
+              }} /> :
+            <PrimaryButton
+              disabled={true}
+              primaryDisabled={true}
+              className={styles.addTab}
+              text={"+"}
+              onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                this.addTab();
+              }} />
+          }
+
         </div>
         <hr></hr>
         {
@@ -179,8 +190,9 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
     this.setState({
       tabs: currentTabs
     })
-    this.changeActiveTab(this.state.tabs.length -1);
-
+    if(tabNumber == this.state.activeTab) {
+      this.changeActiveTab(tabNumber-1);
+    }
   }
 
   public canCloseTab(tabNumber: number): boolean {
@@ -188,6 +200,14 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
       return true;
     } else {
       return false;
+    }
+  }
+
+  public canAddTabs(): boolean {
+    if (this.state.tabs.length == 4) {
+      return false;
+    } else {
+      return true;
     }
   }
 
@@ -218,10 +238,9 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
       this.setState({
         tabs: newTabs
       })
-      // this.changeActiveTab(newTabIndex);
-      this.changeActiveTab(this.state.tabs.length -1);
+      this.changeActiveTab(this.state.tabs.length - 1);
     }
-    this.changeActiveTab(this.state.tabs.length -1);
+    this.changeActiveTab(this.state.tabs.length - 1);
     return null;
   }
 }

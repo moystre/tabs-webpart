@@ -384,19 +384,19 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
               groupName: strings.BasicGroupName,
               groupFields: [
                 PropertyPaneDropdown('dropdownField0', {
-                  label: 'Tab 1:',
+                  label: '',
                   options: this.dropDownList
                 }),
                 PropertyPaneDropdown('dropdownField1', {
-                  label: 'Tab 2:',
+                  label: '',
                   options: this.dropDownList
                 }),
                 PropertyPaneDropdown('dropdownField2', {
-                  label: 'Tab 3:',
+                  label: '',
                   options: this.dropDownList
                 }),
                 PropertyPaneDropdown('dropdownField3', {
-                  label: 'Tab 4:',
+                  label: '',
                   options: this.dropDownList
                 })
               ]

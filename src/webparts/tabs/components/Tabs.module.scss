@@ -24,6 +24,7 @@
 }
 
 .tabsRow  {
+//  position: relative;
   white-space: nowrap;
  // overflow: scroll;
  // overflow-y: auto;
@@ -31,26 +32,40 @@
 
 .tabsRow > div {
   display: inline-block;
+//  float: left;
 }
 
 .listTab {
-  max-width: 75 px;
-  width: 75 px;
+  white-space: normal;
+  padding-left: 0px;
+  padding-right: 0px;
+  -webkit-appearance: none;
+//  max-width: 30 px;
 }
 
 .listTabSelected {
-  max-width: 75 px;
-  width: 75 px;
-  background-color: rgb(214, 214, 214)
+  white-space: normal;
+  padding-left: 0px;
+  padding-right: 0px;
+  -webkit-appearance: none;
+ // max-width: 30 px;
+  background-color: rgb(214, 214, 214);
+ // flex: 1;
 }
 
 .deleteTab {
-  max-width: 5 px;
-  width: 5 px;
+  padding-left: 3px;
+  padding-right: 3px;
+  min-width: 0px;
+  width: auto;
+  flex: 1;
 }
 
 .addTab {
+  padding-left: 0px;
+  padding-right: 0px;
   right: 0;
+  float: right
 }
 
 .title {

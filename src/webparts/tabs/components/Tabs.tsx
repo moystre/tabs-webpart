@@ -44,7 +44,7 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
                 }} />
               <DefaultButton
                 className={styles.deleteTab}
-                text={"-"} />&nbsp;
+                text={'×'} />&nbsp;
             </div>
             : null}
 
@@ -60,7 +60,7 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
                 }} />
               <DefaultButton
                 className={styles.deleteTab}
-                text={"-"} />&nbsp;
+                text={'×'} />&nbsp;
             </div>
             : null}
 
@@ -76,7 +76,7 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
                 }} />
               <DefaultButton
                 className={styles.deleteTab}
-                text={"-"} />&nbsp;
+                text={'×'} />&nbsp;
             </div>
             : null}
 
@@ -92,7 +92,7 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
                 }} />
               <DefaultButton
                 className={styles.deleteTab}
-                text={"-"} />&nbsp;
+                text={'×'} />&nbsp;
             </div>
             : null}
 

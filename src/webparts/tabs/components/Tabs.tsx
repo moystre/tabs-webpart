@@ -24,11 +24,12 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
 
   public async componentDidMount(): Promise<void> {
     await this.addTab();
-    console.log(this.state.tabs);
+    if (this.state.tabs.length == 1) {
+      this.changeActiveTab(0);
+    }
   }
 
   public render(): React.ReactElement<IListViewProps> {
-    console.log('rendered');
     return (
       <div className={styles.listView}>
         <div className={styles.tabsRow}>
@@ -42,12 +43,7 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
                 onClick={(event: React.MouseEvent<HTMLDivElement>) => {
                   this.changeActiveTab(0);
                 }} />
-              <DefaultButton
-                className={styles.deleteTab}
-                text={'×'}
-                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                  this.closeTab(0);
-                }} />&nbsp;
+              &nbsp;
             </div>
             : null}
 
@@ -61,12 +57,14 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
                 onClick={(event: React.MouseEvent<HTMLDivElement>) => {
                   this.changeActiveTab(1);
                 }} />
-              <DefaultButton
-                className={styles.deleteTab}
-                text={'×'} 
-                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                  this.closeTab(1);
-                }}/>&nbsp;
+              {this.canCloseTab(1) ?
+                <DefaultButton
+                  className={styles.deleteTab}
+                  text={'×'}
+                  onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                    this.closeTab(1);
+                  }} /> : null}
+              &nbsp;
             </div>
             : null}
 
@@ -80,12 +78,14 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
                 onClick={(event: React.MouseEvent<HTMLDivElement>) => {
                   this.changeActiveTab(2);
                 }} />
-              <DefaultButton
-                className={styles.deleteTab}
-                text={'×'}
-                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                  this.closeTab(2);
-                }} />&nbsp;
+              {this.canCloseTab(2) ?
+                <DefaultButton
+                  className={styles.deleteTab}
+                  text={'×'}
+                  onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                    this.closeTab(2);
+                  }} /> : null}
+              &nbsp;
             </div>
             : null}
 
@@ -99,12 +99,14 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
                 onClick={(event: React.MouseEvent<HTMLDivElement>) => {
                   this.changeActiveTab(3);
                 }} />
-              <DefaultButton
-                className={styles.deleteTab}
-                text={'×'}
-                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                  this.closeTab(3);
-                }} />&nbsp;
+              {this.canCloseTab(3) ?
+                <DefaultButton
+                  className={styles.deleteTab}
+                  text={'×'}
+                  onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                    this.closeTab(3);
+                  }} /> : null}
+              &nbsp;
             </div>
             : null}
 
@@ -165,43 +167,10 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
       </div>
     );
   }
-  /*
-    public returnItemsOfActiveTab(): IItem[] {
-      var itemsOfActiveTab = null;
-        this.props.items.forEach(array => {
-        if (array.value.indexOf.toString == this.state.activeTab.toString) {
-          console.log(array.value.indexOf.toString);
-          itemsOfActiveTab = array;
-        }
-      });
-      return itemsOfActiveTab;
-    }
-  */
-  /*
-   public getTabByNumber(tabNumber: number): ITab {
-     var tab = null;
-     switch (tabNumber) {
-       case 0:
-         tab = this.state.tab0;
-         break;
-       case 1:
-         tab = this.state.tab1;
-         break;
-       case 2:
-         tab = this.state.tab2;
-         break;
-       case 3:
-         tab = this.state.tab3;
-         break;
-       default:  tab = this.state.tab0;
-         break;
-     }
-     return tab;
-   }
-*/
+
   public async changeActiveTab(tabNumber: number): Promise<void> {
-    this.setState({ activeTab: tabNumber });
-    //  console.log('activeTab: ' + this.state.tabs[tabNumber].list.listTitle);
+    this.setState({ activeTab: (tabNumber) });
+    this.render();
   }
 
   public async closeTab(tabNumber: number): Promise<void> {
@@ -210,7 +179,16 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
     this.setState({
       tabs: currentTabs
     })
-    //set active tab
+    this.changeActiveTab(this.state.tabs.length -1);
+
+  }
+
+  public canCloseTab(tabNumber: number): boolean {
+    if (this.state.tabs.length == (tabNumber + 1)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public async addTab(): Promise<void> {
@@ -220,7 +198,6 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
       var tabToAdd: ITab;
       let newTabIndex = this.state.tabs.length + 1;
       let newList = await this.props.renderedListsFromSite[newTabIndex];
-      console.log('')
       var newTab: {
         tabIndex: number;
         list: IRenderedListFromSite;
@@ -235,37 +212,16 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
           tabIndex: newTabIndex,
           list: newList,
         }
-        this.changeActiveTab(newTabIndex);
       }
       tabToAdd = newTab;
       var newTabs = this.state.tabs.concat(tabToAdd);
       this.setState({
         tabs: newTabs
       })
-      this.changeActiveTab(newTabIndex);
-      console.log('tabs: ');
-      console.log(this.state.tabs);
-      this.render();
+      // this.changeActiveTab(newTabIndex);
+      this.changeActiveTab(this.state.tabs.length -1);
     }
+    this.changeActiveTab(this.state.tabs.length -1);
     return null;
   }
-  /*
-    public populateTabs() {
-      console.log('populateTabs: ');
-      for (let tab in this.state.tabs) {
-        console.log(this.state.tabs[tab].list.listTitle);
-        return (
-          <div>
-            <DefaultButton
-           
-              text={"List "}
-            />
-            <DefaultButton
-              text={"-"}
-            />&nbsp;
-          </div>
-        )
-      }
-    }
-  */
 }

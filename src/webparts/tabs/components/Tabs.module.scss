@@ -24,7 +24,6 @@
 }
 
 .tabsRow  {
-//  position: relative;
   white-space: nowrap;
  // overflow: scroll;
  // overflow-y: auto;
@@ -37,20 +36,25 @@
 
 .listTab {
   white-space: normal;
-  padding-left: 0px;
-  padding-right: 0px;
+  padding-left: 4px;
+  padding-right: 4px;
   -webkit-appearance: none;
-//  max-width: 30 px;
+}
+.listTab :hover {
+-webkit-text-fill-color: rgb(122, 122, 122);
+  -webkit-appearance: none;
 }
 
 .listTabSelected {
   white-space: normal;
-  padding-left: 0px;
-  padding-right: 0px;
+  padding-left: 4px;
+  padding-right: 4px;
   -webkit-appearance: none;
- // max-width: 30 px;
   background-color: rgb(214, 214, 214);
- // flex: 1;
+}
+
+.listTabSelected :hover {
+  -webkit-text-fill-color: rgb(122, 122, 122);
 }
 
 .deleteTab {

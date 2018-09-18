@@ -11,8 +11,6 @@ export interface IListViewState {
 }
 
 export default class ListView extends React.Component<IListViewProps, IListViewState> {
-  public amountOfTabs: number = 0;
-  public tabsToView: ITab[] = [];
 
   constructor(props: IListViewProps) {
     super(props);
@@ -22,11 +20,20 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
     };
   }
 
+  public async componentWillMount(): Promise<void> {
+  }
+
   public async componentDidMount(): Promise<void> {
-    await this.addTab();
-    if (this.state.tabs.length == 1) {
-      this.changeActiveTab(0);
+  }
+
+  public async componentWillReceiveProps(): Promise<void> {
+    if (this.state.tabs == null) {
+      this.setState({
+        tabs: []
+      })
     }
+    await this.addTab();
+    this.changeActiveTab(0);
   }
 
   public render(): React.ReactElement<IListViewProps> {
@@ -82,12 +89,12 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
                 }} />
               {this.canCloseTab(2) ?
                 <DefaultButton
-                className={this.isTabActive(2) ?
-                  styles.deleteTabActive :
-                  styles.deleteTab}
+                  className={this.isTabActive(1) ?
+                    styles.deleteTabActive :
+                    styles.deleteTab}
                   text={'×'}
                   onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                    this.closeTab(2);
+                    this.closeTab(1);
                   }} /> : null}
               &nbsp;
             </div>
@@ -105,12 +112,12 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
                 }} />
               {this.canCloseTab(3) ?
                 <DefaultButton
-                className={this.isTabActive(3) ?
-                  styles.deleteTabActive :
-                  styles.deleteTab}
+                  className={this.isTabActive(1) ?
+                    styles.deleteTabActive :
+                    styles.deleteTab}
                   text={'×'}
                   onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                    this.closeTab(3);
+                    this.closeTab(1);
                   }} /> : null}
               &nbsp;
             </div>
@@ -130,8 +137,7 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
               text={"+"}
               onClick={(event: React.MouseEvent<HTMLDivElement>) => {
                 this.addTab();
-              }} />
-          }
+              }} />}
 
         </div>
         <hr></hr>
@@ -186,8 +192,10 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
   }
 
   public async changeActiveTab(tabNumber: number): Promise<void> {
-    this.setState({ activeTab: (tabNumber) });
-    this.render();
+    if (this.state.tabs) {
+      await this.setState({ activeTab: (tabNumber) });
+    }
+    //  this.render();
   }
 
   public isTabActive(tabNumber: number): boolean {
@@ -199,62 +207,117 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
   }
 
   public async closeTab(tabNumber: number): Promise<void> {
-    var currentTabs = this.state.tabs;
-    currentTabs.splice(tabNumber, 1);
-    this.setState({
-      tabs: currentTabs
-    })
+    if (this.state.tabs) {
+      var currentTabs = this.state.tabs;
+      currentTabs.splice(tabNumber, 1);
+      await this.setState({
+        tabs: currentTabs
+      })
+    }
+
     if (tabNumber == this.state.activeTab) {
       this.changeActiveTab(tabNumber - 1);
     }
   }
 
   public canCloseTab(tabNumber: number): boolean {
-    if (this.state.tabs.length == (tabNumber + 1)) {
-      return true;
-    } else {
-      return false;
+    if (this.state.tabs == null) {
+      this.setState({
+        tabs: []
+      })
+    } else { }
+    try {
+      if (this.state.tabs) {
+        if (this.state.tabs.length == (tabNumber + 1)) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+
+    }
+    catch (exception) {
+      console.log(exception);
     }
   }
 
+
   public canAddTabs(): boolean {
-    if (this.state.tabs.length == 4) {
-      return false;
-    } else {
-      return true;
+    if (this.state.tabs == null) {
+      this.setState({
+        tabs: []
+      })
+    } else { }
+    try {
+      if (this.state.tabs != null) {
+        if (this.state.tabs.length == 4) {
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return null;
+      }
+
+    }
+    catch (exception) {
+      console.log(exception);
     }
   }
 
   public async addTab(): Promise<void> {
-    if (this.state.tabs.length >= 4) {
-      console.log('There can not be more than 4 tabs on this web part.');
-    } else {
-      var tabToAdd: ITab;
-      let newTabIndex = this.state.tabs.length + 1;
-      let newList = await this.props.renderedListsFromSite[newTabIndex];
-      var newTab: {
-        tabIndex: number;
-        list: IRenderedListFromSite;
-      };
-      if (this.state.tabs.length > 0) {
-        newTab = {
-          tabIndex: newTabIndex,
-          list: newList,
-        }
-      } else {
-        newTab = {
-          tabIndex: newTabIndex,
-          list: newList,
-        }
-      }
-      tabToAdd = newTab;
-      var newTabs = this.state.tabs.concat(tabToAdd);
+    if (this.state.tabs == null) {
       this.setState({
-        tabs: newTabs
+        tabs: []
       })
-      this.changeActiveTab(this.state.tabs.length - 1);
+    } else { }
+    try {
+      if (this.state.tabs.length >= 4) {
+        console.log('There can not be more than 4 tabs on this web part.');
+      } else {
+        var tabToAdd: ITab;
+        let newTabIndex;
+        if (this.state.tabs) {
+          newTabIndex = this.state.tabs.length + 1;
+        } else {
+          newTabIndex = 1;
+        }
+
+        let newList = await this.props.renderedListsFromSite[newTabIndex];
+        var newTab: {
+          tabIndex: number;
+          list: IRenderedListFromSite;
+        };
+        if (this.state.tabs.length > 0) {
+          newTab = {
+            tabIndex: newTabIndex,
+            list: newList,
+          }
+        } else {
+          newTab = {
+            tabIndex: newTabIndex,
+            list: newList,
+          }
+        }
+        tabToAdd = newTab;
+        var newTabs = this.state.tabs.concat(tabToAdd);
+        await this.setState({
+          tabs: newTabs
+        })
+        if (this.state.tabs) {
+          this.changeActiveTab(this.state.tabs.length - 1);
+        }
+
+      }
+      if (this.state.tabs) {
+        this.changeActiveTab(this.state.tabs.length - 1);
+      }
+      return null;
     }
-    this.changeActiveTab(this.state.tabs.length - 1);
-    return null;
+    catch (exception) {
+      console.log(exception);
+    }
   }
 }

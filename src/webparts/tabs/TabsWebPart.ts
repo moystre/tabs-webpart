@@ -150,18 +150,19 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
     while (this.renListsFromSite == null) {
     }
     this.dropDownList = await this.getSelectionList();
+
     this.items0, this.items1, this.items2, this.items3 = null;
-    this.items0 = await this.getItems(this.properties.dropdownField0);
-    this.items1 = await this.getItems(this.properties.dropdownField1);
-    this.items2 = await this.getItems(this.properties.dropdownField2);
-    this.items3 = await this.getItems(this.properties.dropdownField3);
-    this.dropDownfieldName0 = this.getListNameByKey(this.properties.dropdownField0);
-    this.dropDownfieldName1 = this.getListNameByKey(this.properties.dropdownField1);
-    this.dropDownfieldName2 = this.getListNameByKey(this.properties.dropdownField2);
-    this.dropDownfieldName3 = this.getListNameByKey(this.properties.dropdownField3);
-    // console.log(this.dropDownfieldName);
+    this.items0 = await this.getItems('0');
+    this.items1 = await this.getItems('1');
+    this.items2 = await this.getItems('2');
+    this.items3 = await this.getItems('3');
+
+    this.dropDownfieldName0 = this.getListNameByKey('0');
+    this.dropDownfieldName1 = this.getListNameByKey('1');
+    this.dropDownfieldName2 = this.getListNameByKey('2');
+    this.dropDownfieldName3 = this.getListNameByKey('3');
+
     await this.refreshItems();
-    // this.tabs = [];
   }
 
   public render(): void {
@@ -179,18 +180,26 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
         items1: this.items1,
         items2: this.items2,
         items3: this.items3
-        // tabs: this.tabs
       }
     );
     ReactDom.render(element, this.domElement);
   }
 
   private async refreshItems(): Promise<IItem[]> {
-    return (
-      this.items0 = await this.getItems(this.properties.dropdownField0),
-      this.items1 = await this.getItems(this.properties.dropdownField1),
-      this.items2 = await this.getItems(this.properties.dropdownField2),
-      this.items3 = await this.getItems(this.properties.dropdownField3));
+    try {
+      if (this.properties.dropdownField0) {
+        return (
+          this.items0 = await this.getItems(this.properties.dropdownField0),
+          this.items1 = await this.getItems(this.properties.dropdownField1),
+          this.items2 = await this.getItems(this.properties.dropdownField2),
+          this.items3 = await this.getItems(this.properties.dropdownField3)
+        );
+      } else {
+        return;
+      }
+    } catch (exception) {
+      console.log(exception);
+    }
   }
 
   private async getSelectionList(): Promise<IDropDownList[]> {
@@ -228,7 +237,6 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
         }[] = [];
         container = await this._getListsFromSite();
         container.value.forEach((item: IListFromSiteAsItem) => {
-          //console.log(item);
           list.push({
             listId: item.Id,
             listTitle: item.Title,
@@ -299,7 +307,8 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
           container = await this._getListData(this.getListNameByKey(_dropDownField));
         }
         container.value.forEach((item: ISPList) => {
-          //  console.log(item);
+
+          console.log(item);
           list.push({
             Id: item.Id,
             title: item.Title,
@@ -354,12 +363,12 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
   }
 
   protected async onPropertyPaneConfigurationStart(): Promise<void> {
-    this.refreshItems();
+       this.refreshItems();
     this.dropDownList = await this.getSelectionList();
   }
 
   protected async onPropertyPaneFieldChanged(): Promise<void> {
-    await this.refreshItems();
+     await this.refreshItems();
     try {
       this.dropDownfieldName0 = await this.dropDownList[this.properties.dropdownField0].text.toString();
       this.dropDownfieldName1 = await this.dropDownList[this.properties.dropdownField1].text.toString();

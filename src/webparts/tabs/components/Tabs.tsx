@@ -24,6 +24,8 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
   }
 
   public async componentDidMount(): Promise<void> {
+    await this.addTab();
+    this.changeActiveTab(0);
   }
 
   public async componentWillReceiveProps(): Promise<void> {
@@ -32,8 +34,6 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
         tabs: []
       })
     }
-    await this.addTab();
-    this.changeActiveTab(0);
   }
 
   public render(): React.ReactElement<IListViewProps> {
@@ -89,12 +89,12 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
                 }} />
               {this.canCloseTab(2) ?
                 <DefaultButton
-                  className={this.isTabActive(1) ?
+                  className={this.isTabActive(2) ?
                     styles.deleteTabActive :
                     styles.deleteTab}
                   text={'×'}
                   onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                    this.closeTab(1);
+                    this.closeTab(2);
                   }} /> : null}
               &nbsp;
             </div>
@@ -112,12 +112,12 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
                 }} />
               {this.canCloseTab(3) ?
                 <DefaultButton
-                  className={this.isTabActive(1) ?
+                  className={this.isTabActive(3) ?
                     styles.deleteTabActive :
                     styles.deleteTab}
                   text={'×'}
                   onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                    this.closeTab(1);
+                    this.closeTab(3);
                   }} /> : null}
               &nbsp;
             </div>

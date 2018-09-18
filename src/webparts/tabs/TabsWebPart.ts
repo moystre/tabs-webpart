@@ -150,6 +150,11 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
     while (this.renListsFromSite == null) {
     }
     this.dropDownList = await this.getSelectionList();
+    
+    this.properties.dropdownField0 = '0';
+    this.properties.dropdownField1 = '1';
+    this.properties.dropdownField2 = '2';
+    this.properties.dropdownField3 = '3';
 
     this.items0, this.items1, this.items2, this.items3 = null;
     this.items0 = await this.getItems('0');
@@ -161,7 +166,7 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
     this.dropDownfieldName1 = this.getListNameByKey('1');
     this.dropDownfieldName2 = this.getListNameByKey('2');
     this.dropDownfieldName3 = this.getListNameByKey('3');
-
+    
     await this.refreshItems();
   }
 
@@ -307,8 +312,6 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
           container = await this._getListData(this.getListNameByKey(_dropDownField));
         }
         container.value.forEach((item: ISPList) => {
-
-          console.log(item);
           list.push({
             Id: item.Id,
             title: item.Title,
@@ -320,7 +323,6 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
           })
         });
         renderedList = list;
-        // console.log(list);
       }
       catch (exception) {
         console.warn(exception);
@@ -368,7 +370,7 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
   }
 
   protected async onPropertyPaneFieldChanged(): Promise<void> {
-     await this.refreshItems();
+    await this.refreshItems();
     try {
       this.dropDownfieldName0 = await this.dropDownList[this.properties.dropdownField0].text.toString();
       this.dropDownfieldName1 = await this.dropDownList[this.properties.dropdownField1].text.toString();
@@ -394,19 +396,23 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
               groupFields: [
                 PropertyPaneDropdown('dropdownField0', {
                   label: '',
-                  options: this.dropDownList
+                  options: this.dropDownList,
+                  selectedKey: 3
                 }),
                 PropertyPaneDropdown('dropdownField1', {
                   label: '',
-                  options: this.dropDownList
+                  options: this.dropDownList,
+                  selectedKey: 3
                 }),
                 PropertyPaneDropdown('dropdownField2', {
                   label: '',
-                  options: this.dropDownList
+                  options: this.dropDownList,
+                  selectedKey: 3
                 }),
                 PropertyPaneDropdown('dropdownField3', {
                   label: '',
-                  options: this.dropDownList
+                  options: this.dropDownList,
+                  selectedKey: 3
                 })
               ]
 

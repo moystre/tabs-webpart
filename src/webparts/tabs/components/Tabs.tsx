@@ -123,6 +123,29 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
             </div>
             : null}
 
+          {this.state.tabs[4] ?
+            <div>
+              <DefaultButton
+                className={this.state.activeTab == 4 ?
+                  styles.listTabSelected : styles.listTab
+                }
+                text={this.props.dropdownField4}
+                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                  this.changeActiveTab(4);
+                }} />
+              {this.canCloseTab(4) ?
+                <DefaultButton
+                  className={this.isTabActive(4) ?
+                    styles.deleteTabActive :
+                    styles.deleteTab}
+                  text={'×'}
+                  onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                    this.closeTab(4);
+                  }} /> : null}
+              &nbsp;
+            </div>
+            : null}
+
           {this.canAddTabs() ?
             <PrimaryButton
               className={styles.addTab}
@@ -178,13 +201,22 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
                     compact={false}>
                   </DetailsList> :
 
-                  <DetailsList
-                    className={'DetailsList'}
-                    items={this.props.items0}
-                    columns={this.props.columns}
-                    checkboxVisibility={CheckboxVisibility.onHover}
-                    compact={false}>
-                  </DetailsList>
+                  this.state.tabs[4] && this.state.activeTab == 4 ?
+                    <DetailsList
+                      className={'DetailsList'}
+                      items={this.props.items4}
+                      columns={this.props.columns}
+                      checkboxVisibility={CheckboxVisibility.onHover}
+                      compact={false}>
+                    </DetailsList> :
+
+                    <DetailsList
+                      className={'DetailsList'}
+                      items={this.props.items0}
+                      columns={this.props.columns}
+                      checkboxVisibility={CheckboxVisibility.onHover}
+                      compact={false}>
+                    </DetailsList>
         }
         <br></br>
       </div>
@@ -252,7 +284,7 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
     } else { }
     try {
       if (this.state.tabs != null) {
-        if (this.state.tabs.length == 4) {
+        if (this.state.tabs.length == 5) {
           return false;
         } else {
           return true;
@@ -274,8 +306,8 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
       })
     } else { }
     try {
-      if (this.state.tabs.length >= 4) {
-        console.log('There can not be more than 4 tabs on this web part.');
+      if (this.state.tabs.length >= 5) {
+        console.log('There can not be more than 5 tabs on this web part.');
       } else {
         var tabToAdd: ITab;
         let newTabIndex;

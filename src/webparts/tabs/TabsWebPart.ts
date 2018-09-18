@@ -28,6 +28,7 @@ export interface IListViewWebPartProps {
   dropdownField1: string;
   dropdownField2: string;
   dropdownField3: string;
+  dropdownField4: string;
 }
 
 export interface IListsFromSite {
@@ -93,12 +94,14 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
   public dropDownfieldName1: string = '';
   public dropDownfieldName2: string = '';
   public dropDownfieldName3: string = '';
+  public dropDownfieldName4: string = '';
   public columns: IColumn[];
   // public items: IItems;
   public items0: IItem[];
   public items1: IItem[];
   public items2: IItem[];
   public items3: IItem[];
+  public items4: IItem[];
   public tabs: ITab[];
 
   constructor() {
@@ -155,17 +158,20 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
     this.properties.dropdownField1 = '1';
     this.properties.dropdownField2 = '2';
     this.properties.dropdownField3 = '3';
+    this.properties.dropdownField4 = '4';
 
     this.items0, this.items1, this.items2, this.items3 = null;
     this.items0 = await this.getItems('0');
     this.items1 = await this.getItems('1');
     this.items2 = await this.getItems('2');
     this.items3 = await this.getItems('3');
+    this.items4 = await this.getItems('4');
 
     this.dropDownfieldName0 = this.getListNameByKey('0');
     this.dropDownfieldName1 = this.getListNameByKey('1');
     this.dropDownfieldName2 = this.getListNameByKey('2');
     this.dropDownfieldName3 = this.getListNameByKey('3');
+    this.dropDownfieldName4 = this.getListNameByKey('4');
     
     await this.refreshItems();
   }
@@ -179,12 +185,14 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
         dropdownField1: this.dropDownfieldName1,
         dropdownField2: this.dropDownfieldName2,
         dropdownField3: this.dropDownfieldName3,
+        dropdownField4: this.dropDownfieldName4,
         renderedListsFromSite: this.renListsFromSite,
         columns: this.columns,
         items0: this.items0,
         items1: this.items1,
         items2: this.items2,
-        items3: this.items3
+        items3: this.items3,
+        items4: this.items4
       }
     );
     ReactDom.render(element, this.domElement);
@@ -197,7 +205,8 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
           this.items0 = await this.getItems(this.properties.dropdownField0),
           this.items1 = await this.getItems(this.properties.dropdownField1),
           this.items2 = await this.getItems(this.properties.dropdownField2),
-          this.items3 = await this.getItems(this.properties.dropdownField3)
+          this.items3 = await this.getItems(this.properties.dropdownField3),
+          this.items4 = await this.getItems(this.properties.dropdownField4)
         );
       } else {
         return;
@@ -376,6 +385,7 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
       this.dropDownfieldName1 = await this.dropDownList[this.properties.dropdownField1].text.toString();
       this.dropDownfieldName2 = await this.dropDownList[this.properties.dropdownField2].text.toString();
       this.dropDownfieldName3 = await this.dropDownList[this.properties.dropdownField3].text.toString();
+      this.dropDownfieldName4 = await this.dropDownList[this.properties.dropdownField4].text.toString();
     } catch (exception) {
       console.warn(exception);
     };
@@ -413,6 +423,11 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
                   label: '',
                   options: this.dropDownList,
                   selectedKey: 3
+                }),
+                PropertyPaneDropdown('dropdownField4', {
+                  label: '',
+                  options: this.dropDownList,
+                  selectedKey: 4
                 })
               ]
 

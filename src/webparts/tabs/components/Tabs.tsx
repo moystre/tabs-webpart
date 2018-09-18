@@ -20,22 +20,71 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
     };
   }
 
-  public async componentWillMount(): Promise<void> {
-  }
-
   public async componentDidMount(): Promise<void> {
+    this.hydrateStateWithLocalStorage();
+    window.addEventListener("beforeunload", this.saveStateToLocalStorage.bind(this));
     await this.addTab();
     this.changeActiveTab(0);
   }
 
   public async componentWillReceiveProps(): Promise<void> {
-    if (this.state.tabs == null) {
-      this.setState({
-        tabs: []
-      })
-    }
   }
 
+  componentWillUnmount() {
+    window.removeEventListener("beforeunload", this.saveStateToLocalStorage.bind(this));
+    this.saveStateToLocalStorage();
+  }
+
+  hydrateStateWithLocalStorage() {
+        // get the key's value from localStorage
+        for (let tab in this.state) {
+        let value = localStorage.getItem(tab);
+        console.log(value);
+        // parse the localStorage string and setState
+        try {
+          value = JSON.parse(value);
+         // this.setState({tabs: value });
+        } catch (e) {
+          console.log(e);
+          // handle empty string
+        //  this.setState({ [key]: value });
+        }
+      }
+  }
+
+
+  saveStateToLocalStorage() {
+    for (let tab in this.state.tabs) {
+      localStorage.setItem(tab, JSON.stringify(this.state.tabs[tab]));
+    }
+  }
+/*
+  updateInput(key, value) {
+    this.setState({ [key]: value });
+  }
+*/
+/*
+  addItem(item: ITab[]) {
+
+    const newItem = {
+      id: 1 + Math.random(),
+      value: this.state.newItem.slice()
+    };
+    const list = [...this.state.list];
+    list.push(newItem);
+    this.setState({
+      list,
+      newItem: ""
+    });
+  }
+*/
+/*
+  deleteItem(id) {
+    const tabsArray = [...this.state.tabs];
+    const updatedTabs = tabsArray.filter(tab => tab.tabIndex !== id);
+    this.setState({ tabs: updatedTabs });
+  }
+*/  
   public render(): React.ReactElement<IListViewProps> {
     return (
       <div className={styles.listView}>
@@ -223,11 +272,12 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
     );
   }
 
+  //public saveState()
+
   public async changeActiveTab(tabNumber: number): Promise<void> {
     if (this.state.tabs) {
       await this.setState({ activeTab: (tabNumber) });
     }
-    //  this.render();
   }
 
   public isTabActive(tabNumber: number): boolean {
@@ -268,7 +318,6 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
       } else {
         return false;
       }
-
     }
     catch (exception) {
       console.log(exception);
@@ -292,7 +341,6 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
       } else {
         return null;
       }
-
     }
     catch (exception) {
       console.log(exception);
@@ -316,7 +364,6 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
         } else {
           newTabIndex = 1;
         }
-
         let newList = await this.props.renderedListsFromSite[newTabIndex];
         var newTab: {
           tabIndex: number;
@@ -338,10 +385,10 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
         await this.setState({
           tabs: newTabs
         })
+
         if (this.state.tabs) {
           this.changeActiveTab(this.state.tabs.length - 1);
         }
-
       }
       if (this.state.tabs) {
         this.changeActiveTab(this.state.tabs.length - 1);

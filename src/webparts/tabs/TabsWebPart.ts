@@ -345,7 +345,6 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
     let _listName: string = listName;
     try {
       const response: SPHttpClientResponse = await this.context.spHttpClient.get(this.context.pageContext.web.absoluteUrl
-        /*  + `/_api/web/lists?$filter=Hidden eq false`, */
         + `/_api/web/lists/GetByTitle('` + _listName + `')/items`,
         SPHttpClient.configurations.v1);
       if (!response.ok) {
@@ -406,28 +405,23 @@ export default class ListViewWebPart extends BaseClientSideWebPart<IListViewWebP
               groupFields: [
                 PropertyPaneDropdown('dropdownField0', {
                   label: '',
-                  options: this.dropDownList,
-                  selectedKey: 3
+                  options: this.dropDownList
                 }),
                 PropertyPaneDropdown('dropdownField1', {
                   label: '',
-                  options: this.dropDownList,
-                  selectedKey: 3
+                  options: this.dropDownList
                 }),
                 PropertyPaneDropdown('dropdownField2', {
                   label: '',
-                  options: this.dropDownList,
-                  selectedKey: 3
+                  options: this.dropDownList
                 }),
                 PropertyPaneDropdown('dropdownField3', {
                   label: '',
-                  options: this.dropDownList,
-                  selectedKey: 3
+                  options: this.dropDownList
                 }),
                 PropertyPaneDropdown('dropdownField4', {
                   label: '',
-                  options: this.dropDownList,
-                  selectedKey: 4
+                  options: this.dropDownList
                 })
               ]
 

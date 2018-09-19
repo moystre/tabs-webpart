@@ -21,8 +21,8 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
   }
 
   public async componentDidMount(): Promise<void> {
-    this.hydrateStateWithLocalStorage();
-    window.addEventListener("beforeunload", this.saveStateToLocalStorage.bind(this));
+       this.hydrateStateWithLocalStorage();
+       window.addEventListener("beforeunload", this.saveStateToLocalStorage.bind(this));
     await this.addTab();
     this.changeActiveTab(0);
   }
@@ -30,61 +30,91 @@ export default class ListView extends React.Component<IListViewProps, IListViewS
   public async componentWillReceiveProps(): Promise<void> {
   }
 
-  componentWillUnmount() {
-    window.removeEventListener("beforeunload", this.saveStateToLocalStorage.bind(this));
-    this.saveStateToLocalStorage();
+  public async componentWillUnmount():  Promise<void> {
+        window.removeEventListener("beforeunload", this.saveStateToLocalStorage.bind(this));
+        this.saveStateToLocalStorage();
   }
 
-  hydrateStateWithLocalStorage() {
-        // get the key's value from localStorage
-        for (let tab in this.state) {
-        let value = localStorage.getItem(tab);
-        console.log(value);
-        // parse the localStorage string and setState
+    hydrateStateWithLocalStorage() {
+      let value = localStorage.getItem('activeTab');
+      try {
+        value = JSON.parse(value);
+        var tabNumber = Number(value);
+        this.setState({ activeTab: tabNumber });
+      } catch (e) {
+        console.log(e);
+        this.setState({ activeTab: tabNumber });
+      }
+  /*
+      var newTabs: ITab[] = [];
+      for (let i = 0; i < 5; i++) {
         try {
-          value = JSON.parse(value);
-         // this.setState({tabs: value });
+          let item = localStorage.getItem(i.toString());
+          let tabValue = JSON.parse(item) as ITab;
+          newTabs.push(tabValue);
+          this.setState({
+            tabs: newTabs
+          });
         } catch (e) {
           console.log(e);
-          // handle empty string
-        //  this.setState({ [key]: value });
         }
-      }
-  }
-
-
-  saveStateToLocalStorage() {
-    for (let tab in this.state.tabs) {
-      localStorage.setItem(tab, JSON.stringify(this.state.tabs[tab]));
+        console.log(this.state.tabs[i]);
+      } */
     }
-  }
-/*
-  updateInput(key, value) {
-    this.setState({ [key]: value });
-  }
-*/
-/*
-  addItem(item: ITab[]) {
+  
+  saveStateToLocalStorage() {
+    let _activeTab = 'activeTab';
+    localStorage.setItem(_activeTab, JSON.stringify(this.state.activeTab));
+    
+    for (let tab of this.state.tabs) {
+      let _tab: ITab = tab;
+      let _tabIndex: string = _tab.tabIndex.toString();
+      console.log(_tab);
+      localStorage.setItem(_tabIndex, JSON.stringify(_tab));
+    }
 
-    const newItem = {
-      id: 1 + Math.random(),
-      value: this.state.newItem.slice()
-    };
-    const list = [...this.state.list];
-    list.push(newItem);
-    this.setState({
-      list,
-      newItem: ""
-    });
+
+    /*
+    this.state.tabs.forEach(tab => {
+      console.log(tab.tabIndex);
+         console.log(tab);
+         let tabKey = tab.tabIndex.toString();
+         let tabIndex_ = tab.tabIndex;
+         let tabList_ = tab.list;
+         let tabToAdd: ITab = {
+           tabIndex: tabIndex_,
+           list: tabList_
+         }
+         localStorage.setItem(tabKey, JSON.stringify(tabToAdd));
+    });*/
   }
-*/
-/*
-  deleteItem(id) {
-    const tabsArray = [...this.state.tabs];
-    const updatedTabs = tabsArray.filter(tab => tab.tabIndex !== id);
-    this.setState({ tabs: updatedTabs });
-  }
-*/  
+  /*
+    updateInput(key, value) {
+      this.setState({ [key]: value });
+    }
+  */
+  /*
+    addItem(item: ITab[]) {
+  
+      const newItem = {
+        id: 1 + Math.random(),
+        value: this.state.newItem.slice()
+      };
+      const list = [...this.state.list];
+      list.push(newItem);
+      this.setState({
+        list,
+        newItem: ""
+      });
+    }
+  */
+  /*
+    deleteItem(id) {
+      const tabsArray = [...this.state.tabs];
+      const updatedTabs = tabsArray.filter(tab => tab.tabIndex !== id);
+      this.setState({ tabs: updatedTabs });
+    }
+  */
   public render(): React.ReactElement<IListViewProps> {
     return (
       <div className={styles.listView}>
